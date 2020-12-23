@@ -1,18 +1,67 @@
 #!/usr/bin/env roseus
 
+(ros::roseus-add-msgs "speech_recognition_msgs")
+;;(load "black_white.l")
+
+(defun uber-cb (msg)
+  (if msg
+      (setq message (elt (send msg :transcript) 0))))
+
+(defun speech_recog ()
+  (ros::roseus "uber_speech_client")
+  (ros::subscribe "/speech_to_text_google" speech_recognition_msgs::SpeechRecognitionCandidates #'uber-cb)
+  (setq f_w 0)
+  (setq message "あ")
+  (ros::rate 10)
+  (while (and (ros::ok) (= f_w 0))
+    ;;(setq message (one-shot-subscribe "/speech_to_text_google" speech_recognition_msgs::SpeechRecognitionCandidates))
+    ;;(setq message (elt (send message :transcript) 0))
+    (ros::ros-info "~A" message)
+    (if (string= message "配達")
+	  (progn
+	     (send *ri* :speak-jp "うーばーいーつです")
+	     (setq f_w 3)
+	     (ros::ros-info "~A" f_w)
+	     ))
+    f_w)
+  (ros::spin-once)
+  (ros::sleep)
+  )
+
 #| ubereatsのリュックを受け取る |#
 (defun give-flow ()
   ;; 相対位置#f(300 200 1200)にいることを想定
+
+  
+    
   (relative-move-hand 600 200 1200 0 0 pi/2)
   
   (relative-move-hand 600 0 1200 0 0 pi/2)
   (unix::sleep 3)
   (send *ri* :speak-jp "うーばーいーつです")
+
+  (unix::sleep 3)
   (send *fetch* :stop-grasp)
   (send *ri* :stop-grasp)
+  (send *ri* :speak-jp "にもつをうけとります")
   (unix::sleep 3)
   (send *fetch* :start-grasp)
   (send *ri* :start-grasp :effort 100) ;; effort 100にするのがミソ
+  (unix::sleep 3)
+  ;; 一度だけやり直す
+  (if (< (send *ri* :gripper :position) 0.002)
+      (progn
+	(send *ri* :speak-jp "もういちど")
+	(unix::sleep 1)
+	(send *ri* :speak-jp "にもつをうけとります")
+	(unix::sleep 3)
+	(send *fetch* :stop-grasp)
+	(send *ri* :stop-grasp)
+	(unix::sleep 2)
+	(send *fetch* :start-grasp)
+	(send *ri* :start-grasp :effort 100)
+	))
+    
   (relative-move-hand 500 -300 1000 (/ -pi 2) 0 pi/2)
   (relative-move-hand 400 -300 1000 (/ -pi 2) 0 pi/2)
   (relative-move-hand -200 -400 750 -pi 0 pi/2)
