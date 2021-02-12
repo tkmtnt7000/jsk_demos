@@ -1,3 +1,5 @@
+#include <Stepper.h>
+
 #include <math.h>
 #include <ros.h>
 ros::NodeHandle  nh;
@@ -5,26 +7,33 @@ ros::NodeHandle  nh;
 #include <sensor_msgs/Range.h>
 #include <std_msgs/Int16.h>
 
-#define DIN_PIN 7
-std_msgs::Int16 pin_msg; 
-ros::Publisher arduino_pub("arduino", &pin_msg);
+#define DIN_PIN 12
+//std_msgs::Int16 pin_msg; 
+//ros::Publisher arduino_pub("arduino", &pin_msg);
 
+int pin_msg;
 void pin_setup()
 {
-  pin_msg.data = 0;
-  nh.advertise(arduino_pub);
+  pinMode( DIN_PIN, INPUT_PULLUP );
+  pin_msg = 0;
+  //pin_msg.data = 0;
+  //nh.advertise(arduino_pub);
 }
 
+//int pin_msg;
 void pin_loop()
 {
-  pinMode( DIN_PIN, INPUT_PULLUP );
-  pin_msg.data = digitalRead(DIN_PIN);
-  arduino_pub.publish(&pin_msg);
+  Serial.begin(9600);
+  //pinMode( DIN_PIN, INPUT_PULLUP );
+  //pin_msg.data = digitalRead(DIN_PIN);
+  pin_msg = digitalRead(DIN_PIN);
+  Serial.println(pin_msg);
+  //arduino_pub.publish(&pin_msg);
 }
 
 void setup()
 {
-  nh.initNode();
+  //nh.initNode();
   pin_setup();
 }
 
@@ -37,5 +46,5 @@ void loop()
     pin_loop();
     timer = now;
   }
-  nh.spinOnce();
+  //nh.spinOnce();
 }

@@ -40,9 +40,9 @@ def process_image(msg):
 def start_node():
     rospy.init_node('img_proc')
     rospy.loginfo('img_proc node started')
-    #
-    rospy.Subscriber("/head_camera/rgb/image_raw/compressed",CompressedImage,process_image)
-    #rospy.Subscriber("/usb_cam/image_raw/compressed",CompressedImage,process_image)
+    
+    #rospy.Subscriber("/head_camera/rgb/image_raw/compressed",CompressedImage,process_image)
+    rospy.Subscriber("/usb_cam/image_raw/compressed",CompressedImage,process_image)
     rospy.spin()
 
 if __name__ == '__main__':

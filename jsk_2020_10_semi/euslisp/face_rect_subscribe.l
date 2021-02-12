@@ -32,7 +32,7 @@
       (progn
 	;;(ros::ros-info "hello")
 	;;(ros::ros-info "~A" (send (car *rect*))
-	(ros::ros-info "x: ~A" (send (car *rect*) :x))
+	(ros::ros-info "x: ~A" f(send (car *rect*) :x))
 	(ros::ros-info "y: ~A" (send (car *rect*) :y))
 	(ros::ros-info "width: ~A" (send (car *rect*) :width))
 	(ros::ros-info "height: ~A" (send (car *rect*) :height))
