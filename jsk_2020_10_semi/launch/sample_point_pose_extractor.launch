@@ -1,0 +1,13 @@
+<launch>
+  <node name="nodelet_manager"
+        pkg="nodelet" type="nodelet"
+        args="manager" />
+  <node name="imagesift"
+        pkg="nodelet" type="nodelet"
+        args="load imagesift/ImageSift nodelet_manager">
+    <remap from="image" to="/usb_cam/image_raw"/>
+    <remap from="camera_info" to="/usb_cam/camera_info" />
+  </node>
+  <node name="point_pose_extractor" pkg="jsk_perception" type="point_pose_extractor"
+        respawn="true" output="screen"/>
+</launch>
