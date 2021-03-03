@@ -49,6 +49,7 @@
   (send *ri* :start-grasp :effort 100) ;; effort 100にするのがミソ
   (unix::sleep 3)
   ;; 一度だけやり直す
+  #|
   (if (< (send *ri* :gripper :position) 0.002)
       (progn
 	(send *ri* :speak-jp "もういちど")
@@ -61,7 +62,7 @@
 	(send *fetch* :start-grasp)
 	(send *ri* :start-grasp :effort 100)
 	))
-    
+    |#
   (relative-move-hand 500 -300 1000 (/ -pi 2) 0 pi/2)
   (relative-move-hand 400 -300 1000 (/ -pi 2) 0 pi/2)
   (relative-move-hand -200 -400 750 -pi 0 pi/2)
@@ -145,4 +146,15 @@
   (put-box)
   (unix::sleep 1)
   (box-open-improve)
+  )
+
+(defun pickup-bento ()
+  (relative-move-hand 600 0 600 0 0 pi/2)
+  (move-waist 300)
+  (relative-move-hand -200 -500 500 0 pi/2 pi/2)
+  (move-waist 20)
+  (relative-move-hand -200 -400 700 0 pi/2 pi/2)
+  (relative-move-hand -200 -500 300 0 pi/2 pi/2)
+  (relative-move-hand -200 -500 500 0 pi/2 pi/2)
+  ;;(reset-pose)
   )
