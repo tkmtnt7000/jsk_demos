@@ -28,12 +28,15 @@
   (ros::sleep)
   )
 
+
+;; #f(0 0 1800)あたりに手を持ってくるようにすれば頭の上にかばんをおけるかもしれない
+;; (relative-move-hand 200 0 1400 -pi/2 0 pi/2)
+;; (relative-move-hand 200 100 1600 0 -pi/2 pi/2)
+;; (relative-move-hand 100 200 1700 0 -pi/2 0)
+
 #| ubereatsのリュックを受け取る |#
 (defun give-flow ()
-  ;; 相対位置#f(300 200 1200)にいることを想定
-
-  
-    
+  ;; 相対位置#f(300 200 1200)にいることを想定    
   (relative-move-hand 600 200 1200 0 0 pi/2)
   
   (relative-move-hand 600 0 1200 0 0 pi/2)
@@ -158,3 +161,8 @@
   (relative-move-hand -200 -500 500 0 pi/2 pi/2)
   ;;(reset-pose)
   )
+
+(defun add-uberbag-object ()
+  (let ((uberbag (make-cube 280 450 450)))
+    (send uberbag :translate #f(0 0 1350))
+    (send *co* :add-object uberbag :frame-id "base_link" :object-id "uberbag")))
