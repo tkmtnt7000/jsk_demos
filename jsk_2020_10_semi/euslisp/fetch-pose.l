@@ -16,6 +16,10 @@
        (send *ri* :angle-vector (send *fetch* :angle-vector) 3000 :use-torso t)
        (send *ri* :wait-interpolation nil)))
 
+;;ハンドを動かすだけならこれでよい
+;;(send *fetch* :rarm :move-end-pos #f(0 0 10))
+;;(send *fetch* :rarm :move-end-rot pi/2 #f(0 0 1))
+;;(send *fetch* :rarm :move-end-rot pi/2 :z)
 
 #| 頭の上に手を持ってくる |#
 (defun raise-hand ()
