@@ -17,7 +17,7 @@
   (send *ri* :move-to *dock-front*))
 
 ;; 73A2のまえまで移動する
-(defun move-73-A2-front ()
+(defun move-73A2-front ()
   (setq *room73A2-front* (send (send *scene* :spot "/eng2/7f/room73A2-front") :copy-worldcoords))
   (send *fetch* :move-to *room73A2-front* :world)
   (send *ri* :move-to *room73A2-front*)
