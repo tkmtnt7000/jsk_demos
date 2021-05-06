@@ -3,7 +3,7 @@
   <!-- <group ns="/camera/color"> -->
     <node name="image_siftnode" pkg="imagesift" type="imagesift"
 	  output="screen" >
-      <remap from="image" to="image_raw" />
+      <remap from="image" to="image_rect_color" />
       <!-- <remap from="camera_info" to="camera_info"/> -->
       <!-- <remap from="image" to="image_rect_color" /> -->
       <!-- <param name="image_transport" value="compressed" /> -->
