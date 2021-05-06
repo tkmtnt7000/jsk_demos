@@ -6,6 +6,7 @@
 (load "face_rect_subscribe_class.l")
 (load "fetch-pose.l")
 (load "ubereats-tsukamoto.l")
+(load "ic_hand.l")
 
 (defun main ()
   (box-flow))
