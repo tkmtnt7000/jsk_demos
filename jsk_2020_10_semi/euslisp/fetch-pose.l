@@ -6,7 +6,7 @@
   (setq euler (float-vector roll pitch yaw))
   (setq relative-coord (send (send *fetch* :copy-worldcoords) :transform
 			     (make-coords :pos descartes :rpy euler)))
-  )
+  relative-coord)
 
 #| 6自由度すべて拘束して相対位置に右手を動かす |#
 (defun relative-move-hand (x y z &optional (roll 0) (pitch 0) (yaw 0) (ut t))
@@ -31,4 +31,10 @@
 (defun catch ()
   (send *fetch* :angle-vector #f(5 52 3 77 -59 10 -78 74 0 2))
   (send *ri* :angle-vector (send *fetch* :angle-vector) 5000)
+  )
+
+(defun look-down (z)
+  (send *fetch* :head_tilt_joint :joint-angle z)
+  (send *ri* :angle-vector (send *fetch* :angle-vector) 3000)
+  (send *ri* :wait-interpolation)
   )
