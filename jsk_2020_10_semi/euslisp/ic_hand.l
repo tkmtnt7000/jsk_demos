@@ -34,12 +34,12 @@
 ;; グリッパのついているリンクの厚みが14cmくらいあるのでその半分の7cmくらいicカードを嵩上げしてやる必要がある
 
 (defun touch-ic-desk-1 (coord)
-  (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(0 0 0) :world) :rotate -pi :z) :rotate 0 :y) :rotate pi/2 :x)))
+  (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(-50 0 100) :world) :rotate -pi :z) :rotate 0 :y) :rotate pi/2 :x)))
   (ik-coord *endpos*)
   )
 
 (defun touch-ic-desk-2 (coord)
-  (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(0 0 0) :world) :rotate -pi/2 :x) :rotate 0 :y) :rotate pi :z)))
+  (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(-50 0 100) :world) :rotate -pi/2 :x) :rotate 0 :y) :rotate pi :z)))
   (ik-coord *endpos*)
   )
 
@@ -50,4 +50,12 @@
 (defun ic-desk-sample (coord)
   (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send coord :copy-worldcoords) :translate #f(0 0 0) :world) :rotate -pi/2 :z)))));; :rotate 0 :y) :rotate pi :x)))
   ;;(ik-coord *endpos*)
+  )
+
+(defun whole-touch-desk ()
+  (relative-move-hand 600 -300 900 0 0 pi/2)
+  (search-mark "/sample1")
+  (touch-ic-desk-1 *mark*)
+  (send *fetch* :rarm :move-end-pos #f(0 0 -10))
+  (send *ri* :angle-vector (send *fetch* :angle-vector))
   )
