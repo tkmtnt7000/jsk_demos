@@ -1,3 +1,6 @@
+(ros::roseus "hoge")
+(ros::load-ros-manifest "jsk_recognition_msgs")
+
 ;; for ic_mark recognition
 (defun hold-suica ()
   (send *ri* :stop-grasp)
@@ -58,4 +61,25 @@
   (touch-ic-desk-1 *mark*)
   (send *fetch* :rarm :move-end-pos #f(0 0 -10))
   (send *ri* :angle-vector (send *fetch* :angle-vector))
+  )
+
+(defun voice-action ()
+  (setq f 0)
+  (ros::ros-info "init!")
+  (while (= f 0)
+    (ros::ros-info "done!")
+    (setq message (one-shot-subscribe "/speech_to_text_google" speech_recognition_msgs::SpeechRecognitionCandidates))
+    (setq message (elt (send message :transcript) 0))
+    (print message)
+    (cond ((string= message "スイカ") (progn (setq f 1)))
+          ((or (string= message "ペイペイ") (string= message "台北")) (progn (setq f 2)))))
+    f)
+
+
+(defun string ()
+  (setq word "台北")
+  (cond ((string= word "スイカ") (print word))
+        ((string= word "台北") (print "done!"))
+        (t (print "end"))
+        )
   )
