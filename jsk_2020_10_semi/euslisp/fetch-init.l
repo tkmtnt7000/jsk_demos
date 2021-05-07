@@ -36,6 +36,11 @@
     (send shelf :translate #f(0 650 550))
     (send *co* :add-object shelf :frama-id "base_link" :object-id "left")))
 
+(defun add-desk-collision-object ()
+  (let ((shelf (make-cube 1500 1500 10)))
+    (send shelf :translate #f(1300 0 700))
+    (send *co* :add-object shelf :frame-id "base_link" :object-id "desk")))
+
 (defun delete-shelf-collision-object ()
   (send *co* :delete-object-by-id "shelf"))
 
