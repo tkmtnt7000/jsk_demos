@@ -38,16 +38,23 @@
 
 (defun touch-ic-desk-1 (coord)
   (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(-50 0 100) :world) :rotate -pi :z) :rotate 0 :y) :rotate pi/2 :x)))
-  (look-at-coord (look-at-coord *endpos*))
+  (look-at-coord  *endpos*)
   (ik-coord *endpos*)
   )
 
 (defun touch-ic-desk-2 (coord)
   (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(-50 0 100) :world) :rotate -pi/2 :x) :rotate 0 :y) :rotate pi :z)))
-  (look-at-coord (look-at-coord *endpos*))
+  (look-at-coord *endpos*)
   (ik-coord *endpos*)
   )
 
+(defun show-qrcode (coord)
+  (let (endpos)
+    (setq endpos (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(-50 0 100) :world) :rotate -pi/2 :x) :rotate 0 :y) :rotate pi :z)))
+    (look-at-coord endpos)
+    (ik-coord endpos))
+  )
+  
 ;; ic-desk-1 も ic-desk-2もどちらも両方同じような位置関係になる
 ;; 座標変換の順番が結構重要そう
 ;; #<coordinates #X5566c7e799a8  713.289 112.73 736.234 / -1.46 0.11 -3.129> pi/2 :z 0 :y pi:x
