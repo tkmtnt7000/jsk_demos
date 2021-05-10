@@ -38,11 +38,13 @@
 
 (defun touch-ic-desk-1 (coord)
   (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(-50 0 100) :world) :rotate -pi :z) :rotate 0 :y) :rotate pi/2 :x)))
+  (look-at-coord (look-at-coord *endpos*))
   (ik-coord *endpos*)
   )
 
 (defun touch-ic-desk-2 (coord)
   (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(-50 0 100) :world) :rotate -pi/2 :x) :rotate 0 :y) :rotate pi :z)))
+  (look-at-coord (look-at-coord *endpos*))
   (ik-coord *endpos*)
   )
 
