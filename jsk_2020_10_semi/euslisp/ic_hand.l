@@ -4,6 +4,10 @@
 ;; for ic_mark recognition
 (defun hold-suica ()
   (send *ri* :stop-grasp)
+  (send *ri* :speak-jp "カードをわたしてください")
+  (while (< f 4)
+    (voice-action))
+  (ros::ros-info "hold suica!")
   (send *ri* :start-grasp)
   )
 
@@ -40,20 +44,27 @@
   (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(-50 0 100) :world) :rotate -pi :z) :rotate 0 :y) :rotate pi/2 :x)))
   (look-at-coord  *endpos*)
   (ik-coord *endpos*)
+  ;; down the hand to touch ic
+  (send *fetch* :rarm :move-end-pos #f(0 50 0))
+  (send *ri* :angle-vector (send *fetch* :angle-vector) 5000)
   )
 
+;; 最終的にハンドは左を向く関数
 (defun touch-ic-desk-2 (coord)
-  (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(-50 0 100) :world) :rotate -pi/2 :x) :rotate 0 :y) :rotate pi :z)))
+  (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(-70 -70 120) :world) :rotate -pi/2 :x) :rotate pi :z) :rotate -pi/2 :x)))
   (look-at-coord *endpos*)
   (ik-coord *endpos*)
+  (send *fetch* :rarm :move-end-pos #f(0 50 0))
+  (send *ri* :angle-vector (send *fetch* :angle-vector) 5000)
   )
 
 (defun show-qrcode (coord)
   (let (endpos)
     (setq endpos (send (send *fetch* :copy-worldcoords) :transform (send (send (send (send (send coord :copy-worldcoords) :translate #f(-50 0 100) :world) :rotate -pi/2 :x) :rotate 0 :y) :rotate pi :z)))
     (look-at-coord endpos)
-    (ik-coord endpos))
-  )
+    (ik-coord endpos)
+    (send *fetch* :rarm :move-end-rot 180 #f(1 0 0))
+    )
   
 ;; ic-desk-1 も ic-desk-2もどちらも両方同じような位置関係になる
 ;; 座標変換の順番が結構重要そう
@@ -77,7 +88,9 @@
 (defun whole-touch-desk-partly ()
   ;;(relative-move-hand 600 -300 900 0 0 pi/2)
   (search-mark "/sample1")
-  (touch-ic-desk-1 *mark*)
+  (cond ((string= a "suica") (touch-ic-desk-1 *mark*))
+        ((string= a "paypay") (show-qrcode *mark*))
+        )
   ;;(send *fetch* :rarm :move-end-pos #f(0 0 -10))
   ;;(send *ri* :angle-vector (send *fetch* :angle-vector))
   )
@@ -92,7 +105,8 @@
     (print message)
     (cond ((string= message "スイカ") (setq f 1))
           ((or (string= message "ペイペイ") (string= message "台北") (string= message "paypay")) (setq f 2))
-          ((string= message "終わり") (setq f 3)))
+          ((string= message "終わり") (setq f 3))
+          ((string= message "渡しました") (setq f 4)))
     )
  f)
 
@@ -106,12 +120,26 @@
   )
 |#
 
+(defun end-movement ()
+  (send *fetch* :rarm :move-end-pos #f(0 100 0))
+  (send *ri* :angle-vector (send *fetch* :angle-vector) 5000)
+  (send *ri* :go-pos -0.5 0 0)
+  (relative-move-hand 600 -300 900 0 0 pi/2)
+  (reset-pose))
+
 (defun touch-cycle ()
-  (setq end_tag 1)
-  (while (and (ros::ok) (= end_tag 1))
-    (voice-action)
-    (cond ((= f 1) (progn (send *ri* :speak-jp "すいかでしはらいます") (whole-touch-desk)))
-          ((= f 2) (progn (whole-touch-desk) (send *ri* :speak-jp "ぺいぺい")))
-          ((= f 3) (progn (setq end_tag 0) (send *ri* :speak-jp "おわります"))))
+  (let (end_tag 1)
+    
+    (relative-move-hand 600 -300 900 0 0 pi/2)
+    (look-down 30)
+    (unix::sleep 1)
+    (hold-suica)
+    (while (and (ros::ok) (= end_tag 1))
+      (voice-action)
+      (cond ((= f 1) (progn (send *ri* :speak-jp "すいかでしはらいます") (whole-touch-desk-partly)))
+            ((= f 2) (progn (send *ri* :speak-jp "ぺいぺい") (whole-touch-desk-partly)))
+            ((= f 3) (progn (setq end_tag 0) (send *ri* :speak-jp "おわります") (end-movement)))
+            )
+      )
     )
   )
