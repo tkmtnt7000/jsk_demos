@@ -23,6 +23,8 @@
 ;; show in "fetch Kinematics Simulator"
 (send *ri* :objects (send *scene* :objects))
 
+(defun end-coords-viewer ()
+  (objects (list *fetch* (send *fetch* :rarm :end-coords) *scene*)))
 ;; make collision object
 ;; when using these, you need start demo.launch
 ;; roslaunch fetch_moveit_config demo.launch
