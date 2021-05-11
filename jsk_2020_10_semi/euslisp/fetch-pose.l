@@ -17,8 +17,8 @@
 
 ;;ハンドを動かすだけならこれでよい
 ;;(send *fetch* :rarm :move-end-pos #f(0 0 10))
-;;(send *fetch* :rarm :move-end-rot pi/2 #f(0 0 1))
-;;(send *fetch* :rarm :move-end-rot pi/2 :z)
+;;(send *fetch* :rarm :move-end-rot 90 #f(0 0 1))
+;;(send *fetch* :rarm :move-end-rot 90 :z) notice: degree!
 
 #| 頭の上に手を持ってくる |#
 (defun raise-hand ()
