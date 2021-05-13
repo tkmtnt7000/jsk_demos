@@ -6,8 +6,8 @@ from std_msgs.msg import Int16
 
 
 def main():
-    #cap = cv2.VideoCapture(0) # when using pccam
-    cap = cv2.VideoCapture(5) # when using webcam
+    # cap = cv2.VideoCapture(0) # when using pccam
+    cap = cv2.VideoCapture(4)   # when using webcam
 
     font = cv2.FONT_HERSHEY_SIMPLEX
     
