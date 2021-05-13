@@ -5,8 +5,7 @@
 (defun view-fetch ()
     (send *irtviewer* :look-all
 	  (send (geo::make-bounding-box
-		 (flatten (send-all (send *fetch* :bodies) :vertices)))
-		:grow 2.0))
+		 (flatten (send-all (send *fetch* :bodies) :vertices))) :grow 2.0))
     )
 
 ;; dockの前まで移動する
