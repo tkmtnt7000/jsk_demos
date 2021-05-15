@@ -24,7 +24,12 @@
 
 ;; (initialize) relative-move-hand 300 -400 1000 0 -pi/2 0
 (defun high-five (coord)
-  (setq *endpos* (send (send *fetch* :copy-worldcoords) :transform (send (send (send coord :copy-worldcoords) :translate #f(0 0 0) :world) :rotate pi/2 :z)))
+  (setq tmp-endpos (send (send *fetch* :copy-worldcoords) :transform (send (send (send coord :copy-worldcoords) :translate #f(0 0 0) :world) :rotate pi/2 :z)))
+  
+  ;; (setq y-endpos (elt (send tmp-endpos :worldpos) 1))
+  ;; (setq z-endpos (elt (send tmp-endpos :worldpos) 2))
+  
+  ;; (setq *endpos* (v- xyz-endpos (float-vector 0 0 (+ (elt xyz-endpos 2))))
   (ik-coord *endpos*)
   )
 
@@ -32,7 +37,7 @@
 
 (defun whole-high-five-partly (a)
   (search-mark "/sample1")
-  
+  (high-five *endpos*)
   ;; (cond ((string= a "suica") (touch-ic-desk-1 *mark*))
   ;;       ((string= a "paypay") (show-qrcode *mark*))
   ;;       )
@@ -53,7 +58,9 @@
           ((string= message "終わり") (setq f 3))
           ((string= message "渡しました") (setq f 4)))
     )
- f)
+  f)
+
+
 
 (defun end-movement ()
   (send *fetch* :rarm :move-end-pos #f(0 100 0))
