@@ -46,10 +46,10 @@
   (look-at-coord  *endpos*)
   (ik-coord *endpos*)
   ;; down the hand to touch ic
-  (send *fetch* :rarm :move-end-pos #f(32 -88 0))
+  (send *fetch* :rarm :move-end-pos #f(40 -85 0))
   (send *ri* :angle-vector (send *fetch* :angle-vector) 3000)
   (send *ri* :wait-interpolation nil)
-  (send *fetch* :rarm :move-end-pos #f(-20 75 0))
+  (send *fetch* :rarm :move-end-pos #f(-40 85 0))
   (send *ri* :angle-vector (send *fetch* :angle-vector) 3000)
   )
 
@@ -107,6 +107,7 @@
   )
 
 (defun voice-action ()
+  ;;(let (f message)
   (setq f 0)
   (ros::ros-info "init!")
   (while (= f 0)
@@ -149,7 +150,7 @@
       (send *ri* :speak-jp "なにでしはらいますか")
       (voice-action)
       (cond ((= f 1) (progn (send *ri* :speak-jp "すいかでしはらいます") (whole-touch-desk-partly "suica")))
-            ((= f 2) (progn (send *ri* :speak-jp "ぺいぺい") (whole-touch-desk-partly "paypay")))
+            ((= f 2) (progn (send *ri* :speak-jp "ぺいぺいでしはらいます") (whole-touch-desk-partly "paypay")))
             ((= f 3) (progn (setq end_tag 0) (send *ri* :speak-jp "おわります") (end-movement)))
             )
       )
