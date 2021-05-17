@@ -146,6 +146,7 @@
     (unix::sleep 1)
     (hold-suica)
     (while (and (ros::ok) (= end_tag 1))
+      (send *ri* :speak-jp "なにでしはらいますか")
       (voice-action)
       (cond ((= f 1) (progn (send *ri* :speak-jp "すいかでしはらいます") (whole-touch-desk-partly "suica")))
             ((= f 2) (progn (send *ri* :speak-jp "ぺいぺい") (whole-touch-desk-partly "paypay")))
