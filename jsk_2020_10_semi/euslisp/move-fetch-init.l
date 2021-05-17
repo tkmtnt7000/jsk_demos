@@ -23,6 +23,13 @@
   (send *ri* :move-to *room73A2-front*)
   )
 
+(defun move-table-front ()
+  (setq *dock-front*
+	(send (send *scene* :spot "/eng2/7f/room73B2-table-front")
+		      :copy-worldcoords))
+  (send *fetch* :move-to *dock-front* :world)
+  (send *ri* :move-to *dock-front*))
+
 ;; reset-poseする
 (defun reset-pose (&optional (tm 3000))
     (send *fetch* :reset-pose)
