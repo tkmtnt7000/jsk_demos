@@ -1,4 +1,4 @@
-#!/usr/bin/env roseus~/semi_ws/src/jsk_demos/jsk_2020_10_semi/euslisp
+#!/usr/bin/env roseus
 
 ;; load robot and scene model
 (require "package://fetcheus/fetch-utils.l")
