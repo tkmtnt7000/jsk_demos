@@ -25,9 +25,11 @@
 
 (defun end-coords-viewer ()
   (objects (list *fetch* (send *fetch* :rarm :end-coords) *scene*)))
+
 ;; make collision object
 ;; when using these, you need start demo.launch
 ;; roslaunch fetch_moveit_config demo.launch
+;; rosnode kill /joint_state_publisher
 (defun add-shelf-collision-object ()
   (let ((shelf (make-cube 10 1000 1100)))
     (send shelf :translate #f(850 0 550))
