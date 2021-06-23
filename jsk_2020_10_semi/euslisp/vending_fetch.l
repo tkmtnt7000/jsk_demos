@@ -23,11 +23,22 @@
 (send *ri* :angle-vector (send *fetch* :angle-vector) 3000)
 
 ;; lower
-(relative-move-hand 700 -300 1020 0 0 pi/2)
-(send *fetch* :rarm :move-end-pos #f(30 0 0))
-(send *ri* :angle-vector (send *fetch* :angle-vector) 3000)
-(send *fetch* :rarm :move-end-pos #f(-30 0 0))
-(send *ri* :angle-vector (send *fetch* :angle-vector) 3000)
+(defun lower-button ()
+  (relative-move-hand 700 -300 1000 0 0 pi/2)
+  (send *fetch* :rarm :move-end-pos #f(170 0 -10))
+  (send *ri* :angle-vector (send *fetch* :angle-vector) 3000)
+  (send *ri* :wait-interpolation)
+  (send *fetch* :rarm :move-end-pos #f(-170 0 10))
+  (send *ri* :angle-vector (send *fetch* :angle-vector) 3000)
+  (send *ri* :wait-interpolation)
+  (send *fetch* :rarm :move-end-rot 45 :z)
+  (send *fetch* :rarm :move-end-pos #f(0 0 -100))
+  (send *ri* :angle-vector (send *fetch* :angle-vector) 3000)
+  (send *ri* :wait-interpolation)
+  (send *fetch* :rarm :move-end-pos #f(-80 -80 0))
+  (send *ri* :angle-vector (send *fetch* :angle-vector) 3000)
+  (send *ri* :wait-interpolation)
+  )
 
 ;; 腕を動かし始めると腕が邪魔になって画像認識には不向きなのでできればはじめに画像処理をして大まかな位置を掴んでおき、そこにアプローチするのが良さそう、最終的にはセンサーフィードバックを行う
 ;; ボタンを押してからsuicaがタッチできるまでの間はおよそ20秒弱といったところなので素早く動かすことが必要である
