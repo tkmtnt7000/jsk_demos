@@ -10,7 +10,7 @@
 
 
 (defclass watchdog-interface
-  :super spotkinova-interface
+  :super spot-kinova-interface
   :slots (luminance ypr-euler luminance-threshold stand-start-time yaw-offset battery-temp temp-threshold human-rects rest-time-per-hour human-width-threshold human-height-threshold max-tracking-yaw paranoma-width paranoma-height lookup-angle change-body-duration bark-sound))
 (defmethod watchdog-interface
   (:init
