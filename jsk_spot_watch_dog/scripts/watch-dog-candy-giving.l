@@ -3,7 +3,7 @@
 (load "package://jsk_spot_watch_dog/scripts/watch-dog.l")
 
 (defun watchdog-candy-init (&optional (create-viewer))
-  (unless (boundp '*spot-kinova*) (spot) (send *spot-kinova* :reset-pose))
+  (unless (boundp '*spot-kinova*) (setq *spot-kinova* (spot-kinova :type :gen3_lite_gen3_lite_2f)))
   (unless (ros::ok) (ros::roseus "spot_watchdog"))
   (unless (boundp '*ri*) (setq *ri* (instance watchdog-interface :init)))
 
@@ -21,7 +21,7 @@
       (ros::spin-once)
       (send *ri* :spin-once)
       (setq ret (func-day-basic userdata-alist))
-      (if ret (return-from func-watch ret))
+      (if ret (return-from func-watch-human ret))
       ;; rest
       (when (> (/ (send (ros::time- (ros::time-now) (send *ri* :get-val 'stand-start-time)) :to-sec) 60)
              (- 60  (send *ri* :get-val 'rest-time-per-hour)))
@@ -30,7 +30,7 @@
         (send *ri* :sit)
         (send *ri* :power-off)
         (setq ret :sit)
-        (return-from func-watch ret))
+        (return-from func-watch-human ret))
       ;; check battery temperature
       (when (send *ri* :high-battery-temp)
 
@@ -38,7 +38,7 @@
         (send *ri* :sit)
         (send *ri* :power-off)
         (setq ret :sit)
-        (return-from func-watch ret))
+        (return-from func-watch-human ret))
       ;; watch person
       (let
           ((max-person-height 0)
@@ -66,7 +66,7 @@
                       (send *ri* :play-sound (send *ri* :get-val 'bark-sound)))
                     (progn
                       (setq ret :candy)
-                      (return-from funk-watch ret))
+                      (return-from func-watch-human ret)))
               (setq target-rpy-euler '(0 0 0)))))
         (send* *ri* :body-pose target-rpy-euler))
       (unix::usleep (floor (* (send *ri* :get-val 'change-body-duration) 1000000))) ;; single thred, so consider the image luminance calculation (~0.2s)
@@ -78,9 +78,10 @@
   (send *ri* :angle-vector (send *spot-kinova* :angle-vector #f(0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 -120.075 -17.0383 51.0735 -90.482 -108.916 -0.540145)) 5000)
   (send *ri* :wait-interpolation)
   ;; caution! this plannninng cannot be solved by Moveit because of *co*
-  (send *ri* :angle-vector-raw (send *spot-kinova* :angle-vector #f(0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 -149.075 -17.0383 51.0735 -90.482 -108.916 -0.540145)) 10000)
-  (send *ri* :wait-interpolation)
-  (send *ri* :angle-vector-raw (send *spot-kinova* :head :move-end-pos #f(90 0 0)))
+  (send *ri* :angle-vector-sequence-raw (list (send *spot-kinova* :angle-vector #f(0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 -149.075 -17.0383 51.0735 -90.482 -108.916 -0.540145)) (send *spot-kinova* :head :move-end-pos #f(90 0 0))) (list 5000 5000))
+  ;; (send *ri* :angle-vector-raw (send *spot-kinova* :angle-vector #f(0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 -149.075 -17.0383 51.0735 -90.482 -108.916 -0.540145)) 3000)
+  ;; (send *ri* :wait-interpolation)
+  ;; (send *ri* :angle-vector-raw (send *spot-kinova* :head :move-end-pos #f(90 0 0)))
   (send *ri* :wait-interpolation)
   (send *ri* :stop-grasp)
   (unix::sleep 1)
@@ -88,32 +89,36 @@
   (send *ri* :wait-interpolation)
   (send *ri* :start-grasp)  ;; hold candy
   (unix::sleep 1)
+  ;;(send *ri* :angle-vector-sequence-raw (list (send *spot-kinova* :head :move-end-pos #f(-170 0 0)) (send *spot-kinova* :angle-vector #f(0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 -70.075 -17.0383 51.0735 -90.482 -108.916 -0.540145))) (list 3000 5000))
   (send *ri* :angle-vector-raw (send *spot-kinova* :head :move-end-pos #f(-170 0 0)))
   (send *ri* :wait-interpolation)
-  (send *ri* :angle-vector-raw (send *spot-kinova* :angle-vector #f(0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 -70.075 -17.0383 51.0735 -90.482 -108.916 -0.540145)) 10000)
+  (send *ri* :angle-vector-sequence-raw (list (send *spot-kinova* :angle-vector #f(0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 0.0 45.0 -90.0 -70.075 -17.0383 51.0735 -90.482 -108.916 -0.540145)) (send *spot-kinova* :reset-pose)) (list 5000 3000))
   (send *ri* :wait-interpolation)
-  (send *ri* :angle-vector (send *spot-kinova* :reset-pose) 5000)
-  (send *ri* :wait-interpolation)
+  ;;(send *ri* :angle-vector (send *spot-kinova* :reset-pose) 3000)
+  ;;(send *ri* :wait-interpolation)
+  (send *ri* :speak-jp "どうぞ")
   (send *ri* :stop-grasp)
+  (unix::sleep 1)
+  (send *ri* :angle-vector-raw (send *spot-kinova* :kinova-rest-pose) 8000)
   )
 
 (defun func-candy-giving (userdata-alist)
   (let ((ret nil))
     (send *ri* :speak-jp "飴ちゃんいりますか")
-    (unix::sleep 3)
+    (unix::sleep 7)
     (ros::spin-once)
     (send *ri* :spin-once)
-    (if (send *ri* :get-bal 'human-rects)
+    (if (send *ri* :get-val 'human-rects)
+	(progn
+	  (send *ri* :speak-jp "飴ちゃんあげます")
+	  (send *ri* :speak-jp "私の前に来てください")
+	  (candy-sequence)
+	  (setq ret :watch))
         (progn
           (send *ri* :speak-jp "離れていきました")
           (setq ret :watch)
-          (return-from func-candy-giving ret))
-      (progn
-        (send *ri* :speak-jp "飴ちゃんあげます")
-        (send *ri* :speak-jp "私の前に来てください")
-        (candy-sequence)
-        (setq ret :watch))
-  ret)
+          (return-from func-candy-giving ret)))
+  ret))
 
 (defun watchdog-candy-sm ()
   (let (sm sm-day)
