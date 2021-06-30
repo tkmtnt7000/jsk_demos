@@ -12,7 +12,7 @@
     (send *ri* :move-to coord))
 
 (defun base-position ()
-    ;; back to original position
+  ;; back to original position
     (send *fetch* :reset-pose)
     (send *ri* :angle-vector (send *fetch* :angle-vector) 5000)
     (send *irtviewer* :draw-objects) ;; update viewer
