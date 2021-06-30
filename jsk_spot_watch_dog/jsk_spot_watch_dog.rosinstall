@@ -1,0 +1,4 @@
+- git:
+    uri: https://github.com/tkmtnt7000/jsk_demos.git
+    local-name: jsk-ros-pkg/jsk_demos
+    version: tsukamoto/spot-kinova-watch-dog
