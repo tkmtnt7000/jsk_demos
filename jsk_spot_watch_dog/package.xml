@@ -14,8 +14,8 @@
   <depend>rospy</depend>
   <depend>smach</depend>
   <depend>smach_ros</depend>
-  <depend>jsk_spot_startup</depend>
-  <depend>spoteus</depend>
+  <depend>jsk_spotkinova_startup</depend>
+  <depend>spotkinovaeus</depend>
   
   <export>
 
