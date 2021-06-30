@@ -1,7 +1,7 @@
 #!/usr/bin/env roseus
 
 (load "package://spoteus/spot-interface.l")
-
+(load "package://spotkinovaeus/spotkinova-interface.l")
 (ros::roseus-add-msgs "sensor_msgs")
 (ros::roseus-add-msgs "jsk_recognition_msgs")
 (ros::roseus-add-msgs "nav_msgs")
@@ -10,7 +10,7 @@
 
 
 (defclass watchdog-interface
-  :super spot-interface
+  :super spotkinova-interface
   :slots (luminance ypr-euler luminance-threshold stand-start-time yaw-offset battery-temp temp-threshold human-rects rest-time-per-hour human-width-threshold human-height-threshold max-tracking-yaw paranoma-width paranoma-height lookup-angle change-body-duration bark-sound))
 (defmethod watchdog-interface
   (:init
